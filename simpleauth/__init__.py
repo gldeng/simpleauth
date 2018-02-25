@@ -15,6 +15,10 @@ def _authenticate():
     )
 
 
+def _load_user(username):
+    return User.query.filter_by(username=u).first()
+
+
 def _load_user_from_request(request):
     auth = request.authorization
     if auth is None:
@@ -40,6 +44,7 @@ def create_app(config_pyfile):
     app.config.from_pyfile(config_pyfile)
     db.init_app(app)
     login_manager = LoginManager(app)
+    login_manager.user_loader(_load_user)
     login_manager.request_loader(_load_user_from_request)
     login_manager.unauthorized_handler(_authenticate)
     blueprint = Blueprint('bp', __name__)
