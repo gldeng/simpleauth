@@ -21,6 +21,8 @@ def _load_user_from_request(request):
         return None
     u, p = auth.username, auth.password
     user = User.query.filter_by(username=u).first()
+    if user is None:
+        return None
     if isinstance(p, unicode):
         p = p.encode('utf8')
     m = hashlib.md5()
